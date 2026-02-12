@@ -1,0 +1,193 @@
+.landingPageContainer {
+  width: 100vw;
+  height: 100vh;
+  background: url("/public/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  position: relative;
+}
+
+/* subtle dark overlay for readability */
+.landingPageContainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+}
+
+.landingPageContainer > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ===== NAV ===== */
+
+.landingPageContainer nav {
+  padding-inline: 2rem;
+  padding-block: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landingPageContainer nav h2 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.landingPageContainer nav .navlist {
+  display: flex;
+  gap: 0.6rem;   /* tighter spacing */
+  align-items: center;
+}
+
+
+/* clickable nav items */
+.landingPageContainer nav .navlist p,
+.landingPageContainer nav .navlist div {
+  padding: 0.4rem 0.7rem;
+  border-radius: 10px;
+  transition: 0.2s ease;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.landingPageContainer nav .navlist p:hover,
+.landingPageContainer nav .navlist div:hover {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+
+/* ===== MAIN ===== */
+
+.landingMainContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 4rem;
+  height: 80vh;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* left text block */
+.landingMainContainer > div:nth-child(1) {
+  font-size: 2.2rem;
+  max-width: 560px;
+}
+
+.landingMainContainer > div:nth-child(1) h2 {
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.landingMainContainer > div:nth-child(1) p {
+  font-size: 1.2rem;
+  color: #e5e7eb;
+  opacity: 0.9;
+}
+
+
+/* ===== GET STARTED BUTTON ===== */
+
+.landingMainContainer > div:nth-child(1) div[role='button'] {
+  background: linear-gradient(135deg, #ff9839, #d97500);
+  width: fit-content;
+  padding: 1rem 1.6rem;
+  border-radius: 20px;
+  text-align: center;
+  margin-top: 1.9rem;
+  transition: 0.25s;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.landingMainContainer > div:nth-child(1) div[role='button']:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 35px rgba(0,0,0,0.5);
+}
+
+.landingMainContainer > div:nth-child(1) div[role='button'] a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+
+/* ===== RIGHT IMAGE ===== */
+
+.landingMainContainer > div:nth-child(2) img {
+  height: 70vh;
+  width: auto;
+  filter: drop-shadow(0 25px 45px rgba(0,0,0,0.55));
+  animation: float 6s ease-in-out infinite;
+}
+
+
+/* ===== FLOAT ANIMATION ===== */
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+  100% { transform: translateY(0); }
+}
+
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+  .landingMainContainer {
+    flex-direction: column;
+    text-align: center;
+    padding-inline: 2rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.6rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: 50vh;
+  }
+}
+
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 20px;
+  text-align: center;
+
+}
+.meetContainer {
+  display: flex;
+  padding-inline: 20px;
+  height: 80vh;
+  gap: 10vw;
+  justify-content: center;
+}
+
+
+
+.leftPanel {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+}
+
+.rightPanel {
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel > img {
+  width: 30vw;
+  height: auto;
+  border-radius: 20px;
+}

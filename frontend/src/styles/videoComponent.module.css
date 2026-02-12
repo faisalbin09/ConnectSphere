@@ -1,0 +1,373 @@
+/* Main container */
+.meetVideoContainer {
+    position: relative;
+    height: 100vh;
+    background: radial-gradient(circle at top, #0f172a, #020617 70%);
+    overflow: hidden;
+    color: white;
+}
+
+/* Self video */
+.meetUserVideo {
+    position: absolute;
+    bottom: 10vh;
+    height: 20vh;
+    width: auto;
+    left: 1vw;
+    border-radius: 18px;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    background: black;
+    backdrop-filter: blur(6px);
+    transition: transform .25s ease;
+}
+
+.meetUserVideo:hover {
+    transform: scale(1.04);
+}
+
+/* Bottom controls bar */
+.buttonContainers {
+    position: absolute;
+    width: 100vw;
+    bottom: 0;
+    text-align: center;
+    padding: 16px 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    z-index: 5;
+}
+
+/* All control buttons */
+.buttonContainers button {
+    margin: 0 14px !important;
+    background: rgba(255,255,255,0.08) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 50% !important;
+    padding: 14px !important;
+    transition: all .25s ease !important;
+}
+
+.buttonContainers button:hover {
+    transform: scale(1.15);
+    background: rgba(59,130,246,0.25) !important;
+    box-shadow: 0 0 18px rgba(59,130,246,0.6);
+}
+
+/* 🔴 Disconnect button special hover */
+.buttonContainers button:nth-child(2) {
+    background: rgba(255,0,0,0.18) !important;
+}
+
+.buttonContainers button:nth-child(2):hover {
+    background: #ff3b3b !important;
+    box-shadow: 0 0 20px rgba(255,0,0,0.9);
+    transform: scale(1.18);
+}
+
+/* Conference grid */
+.conferenceView {
+    display: flex;
+    padding: 14px;
+    gap: 14px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px);
+}
+
+.conferenceView video {
+    width: 40vw;
+    height: 20vh;
+    min-width: 30vw;
+    border-radius: 14px;
+    background: black;
+    border: 2px solid rgba(255,255,255,0.12);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.55);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.conferenceView video:hover {
+    transform: scale(1.03);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.75);
+}
+
+/* Chat side panel */
+/* Chat side panel — smaller + modern */
+.chatRoom {
+    position: absolute;
+    height: 82vh;          /* slightly reduced */
+    right: 1.5vw;
+    top: 4vh;
+    bottom: 90px;          /* ✅ keeps it above button bar */
+    width: 26vw;
+
+    background: rgba(255,255,255,0.92);
+    border-radius: 18px;
+    padding: 16px;
+
+    box-shadow: 
+        -10px 0 40px rgba(0,0,0,0.25),
+        0 0 0 1px rgba(255,255,255,0.4) inset;
+
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,0,0,0.08);
+
+    z-index: 10;           /* ✅ above video & blur layers */
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Chat header */
+.chatContainer h1 {
+    margin: 4px 0 12px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: #0f172a;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding-bottom: 8px;
+}
+
+/* Messages area — better spacing */
+.chattingDisplay {
+    overflow-y: auto;
+    padding-right: 6px;
+    padding-bottom: 90px;
+    height: 100%;
+}
+
+/* Message bubble */
+.chattingDisplay div {
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    padding: 10px 12px;
+    border-radius: 14px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    margin-bottom: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: transform .15s ease;
+}
+
+.chattingDisplay div:hover {
+    transform: translateY(-2px);
+}
+
+/* Sender name */
+.chattingDisplay p:first-child {
+    font-size: 0.8rem;
+    color: #475569;
+    margin-bottom: 2px;
+}
+
+/* Message text */
+.chattingDisplay p:last-child {
+    font-size: 0.95rem;
+    color: #0f172a;
+}
+
+/* ===== FINAL CENTERED CHAT BAR ===== */
+
+.chattingArea {
+    position: absolute;
+    bottom: 10px;
+    left: 14px;
+    right: 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 8px;
+    border-radius: 12px;
+
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid rgba(0,0,0,0.07);
+
+    box-shadow:
+        0 6px 16px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+
+/* Text field takes remaining width */
+.chattingArea :global(.MuiTextField-root) {
+    flex: 1;
+    margin: 0 !important;
+}
+
+
+/* Normalize outlined input */
+.chattingArea :global(.MuiOutlinedInput-root) {
+    height: 34px;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 0.9rem;
+}
+
+
+/* Remove extra padding */
+.chattingArea :global(.MuiOutlinedInput-input) {
+    padding: 7px 10px !important;
+}
+
+
+/* Button same height as input */
+.chattingArea :global(.MuiButton-contained) {
+    height: 34px;
+    min-height: 34px;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+
+/* Scrollbar polish */
+.chattingDisplay::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chattingDisplay::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.25);
+    border-radius: 10px;
+}
+.buttonContainers {
+    z-index: 5;
+}
+
+
+/* join as guest  */
+/* ===== Wrapper ===== */
+
+.lobbyWrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #020617, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+
+/* ===== Card ===== */
+
+.lobbyCard {
+  background: #111827;
+  padding: 40px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+  border: 1px solid #1f2937;
+}
+
+
+/* ===== Title ===== */
+
+.lobbyTitle {
+  color: #ffffff;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+
+/* ============================= */
+/* ===== MUI TEXTFIELD FIX ===== */
+/* ============================= */
+
+.lobbyInput :global(.MuiOutlinedInput-root) {
+  background: transparent;
+  border-radius: 10px;
+  color: white;
+}
+
+.lobbyInput :global(.MuiOutlinedInput-input) {
+  color: white;
+}
+
+/* label normal */
+.lobbyInput :global(.MuiInputLabel-root) {
+  color: #e5e7eb;
+}
+
+/* label when focused (floating label) */
+.lobbyInput :global(.MuiInputLabel-root.Mui-focused) {
+  color: #ffffff;
+}
+
+/* outline border normal */
+.lobbyInput :global(.MuiOutlinedInput-notchedOutline) {
+  border-color: #6b7280;
+}
+
+/* outline hover */
+.lobbyInput :global(.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline) {
+  border-color: #9ca3af;
+}
+
+/* outline focused */
+.lobbyInput :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+  border-color: #ef4444;
+  border-width: 2px;
+}
+
+
+/* ======================= */
+/* ===== Connect Button ==== */
+/* ======================= */
+
+.lobbyButton {
+  background: #ef4444 !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  padding: 12px !important;
+  border-radius: 10px !important;
+  font-size: 15px !important;
+}
+
+.lobbyButton:hover {
+  background: #dc2626 !important;
+}
+
+
+/* ======================= */
+/* ===== Video Preview ==== */
+/* ======================= */
+
+.videoPreview {
+  margin-top: 12px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #1f2937;
+  background: black;
+}
+
+.videoPreview video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* ======================= */
+/* ===== Responsive ====== */
+/* ======================= */
+
+@media (max-width: 480px) {
+  .lobbyCard {
+    padding: 26px;
+  }
+
+  .lobbyTitle {
+    font-size: 20px;
+  }
+}
