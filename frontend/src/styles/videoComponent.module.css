@@ -1,45 +1,57 @@
 /* Main container */
+/* ================= MAIN CONTAINER ================= */
+
 .meetVideoContainer {
     position: relative;
     height: 100vh;
     background: radial-gradient(circle at top, #0f172a, #020617 70%);
     overflow: hidden;
     color: white;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Self video */
+
+/* ================= SELF VIDEO ================= */
+
 .meetUserVideo {
     position: absolute;
-    bottom: 10vh;
-    height: 20vh;
-    width: auto;
-    left: 1vw;
+    bottom: 12vh;
+    left: 1.5vw;
+
+    width: 260px;
+    aspect-ratio: 4 / 3;   /* taller, face-friendly */
+    object-fit: cover;
+
     border-radius: 18px;
     border: 2px solid rgba(255,255,255,0.15);
     box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     background: black;
-    backdrop-filter: blur(6px);
+
     transition: transform .25s ease;
+    z-index: 4;
 }
 
 .meetUserVideo:hover {
-    transform: scale(1.04);
+    transform: scale(1.05);
 }
 
-/* Bottom controls bar */
+
+/* ================= BOTTOM CONTROLS ================= */
+
 .buttonContainers {
     position: absolute;
     width: 100vw;
     bottom: 0;
     text-align: center;
     padding: 16px 0;
+
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(14px);
     border-top: 1px solid rgba(255,255,255,0.08);
     z-index: 5;
 }
 
-/* All control buttons */
 .buttonContainers button {
     margin: 0 14px !important;
     background: rgba(255,255,255,0.08) !important;
@@ -55,7 +67,8 @@
     box-shadow: 0 0 18px rgba(59,130,246,0.6);
 }
 
-/* 🔴 Disconnect button special hover */
+/* disconnect button */
+
 .buttonContainers button:nth-child(2) {
     background: rgba(255,0,0,0.18) !important;
 }
@@ -66,30 +79,53 @@
     transform: scale(1.18);
 }
 
-/* Conference grid */
+
+/* ================= REMOTE GRID ================= */
+
 .conferenceView {
+    flex: 1;
     display: flex;
-    padding: 14px;
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+    align-content: flex-start;
+
     background: rgba(255,255,255,0.03);
     backdrop-filter: blur(6px);
+    overflow-y: auto;
 }
 
-.conferenceView video {
-    width: 40vw;
-    height: 20vh;
-    min-width: 30vw;
-    border-radius: 14px;
+
+/* video card wrapper */
+
+.conferenceView > div {
+    width: min(380px, 40vw);   /* a little smaller */
+    aspect-ratio: 4 / 3;
+
     background: black;
+    border-radius: 16px;
+    overflow: hidden;
+
     border: 2px solid rgba(255,255,255,0.12);
     box-shadow: 0 10px 25px rgba(0,0,0,0.55);
-    transition: transform .25s ease, box-shadow .25s ease;
 }
 
-.conferenceView video:hover {
+
+.conferenceView > div:hover {
     transform: scale(1.03);
-    box-shadow: 0 14px 35px rgba(0,0,0,0.75);
+    box-shadow: 0 16px 35px rgba(0,0,0,0.75);
 }
+
+
+/* actual video element */
+
+.conferenceView video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* prevents stretch */
+    display: block;
+}
+
 
 /* Chat side panel */
 /* Chat side panel — smaller + modern */

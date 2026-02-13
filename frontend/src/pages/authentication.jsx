@@ -26,19 +26,66 @@ export default function Authentication() {
     const [message, setMessage] = React.useState("");
     const [formState, setFormState] = React.useState(0);
     const [open, setOpen] = React.useState(false);
+    const [confirmPassword, setConfirmPassword] = React.useState("");
+
 
     const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
+    const getPasswordChecks = (pwd) => ({
+        length: pwd.length >= 8,
+        uppercase: /[A-Z]/.test(pwd),
+        digit: /\d/.test(pwd),
+        special: /[@$!%*?&#^()_\-+=]/.test(pwd)
+    });
+
+    const passwordChecks = getPasswordChecks(password);
+
+
+    const isValidPassword = (pwd) => {
+        const c = getPasswordChecks(pwd);
+        return c.length && c.uppercase && c.digit && c.special;
+    };
+
+
     const handleAuth = async () => {
         try {
+
+            // LOGIN
             if (formState === 0) {
                 await handleLogin(username, password);
+                return;
             }
 
+            // SIGNUP
             if (formState === 1) {
+
+                // basic checks
+                if (!name || !username || !password || !confirmPassword) {
+                    setError("All fields are required");
+                    return;
+                }
+
+                // password strength check
+                if (!isValidPassword(password)) {
+                    setError(
+                        "Password must be 8+ chars with uppercase, number & special character"
+                    );
+                    return;
+                }
+
+                // confirm password check
+                if (password !== confirmPassword) {
+                    setError("Passwords do not match");
+                    return;
+                }
+
+                // ✅ only now call register
                 const result = await handleRegister(name, username, password);
+
+                // reset
                 setUsername("");
                 setPassword("");
+                setConfirmPassword("");
                 setName("");
                 setMessage(result);
                 setOpen(true);
@@ -51,6 +98,7 @@ export default function Authentication() {
             setError(msg);
         }
     };
+
 
     const inputSX = {
         "& .MuiOutlinedInput-input": { color: "white" },
@@ -144,7 +192,16 @@ export default function Authentication() {
                             </Button>
                         </Box>
 
-                        <Box component="form" noValidate sx={{ width: "100%" }}>
+                        <Box
+                            component="form"
+                            noValidate
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleAuth();
+                            }}
+                            sx={{ width: "100%" }}
+                        >
+
 
                             {formState === 1 && (
                                 <TextField
@@ -176,6 +233,55 @@ export default function Authentication() {
                                 sx={inputSX}
                             />
 
+                            {/* ✅ LIVE PASSWORD RULE CHECK */}
+                            {formState === 1 && password && (
+                                <Box sx={{ mt: 1, fontSize: 13 }}>
+
+                                    <Typography sx={{ color: passwordChecks.length ? "#22c55e" : "#ef4444" }}>
+                                        {passwordChecks.length ? "✓" : "✗"} At least 8 characters
+                                    </Typography>
+
+                                    <Typography sx={{ color: passwordChecks.uppercase ? "#22c55e" : "#ef4444" }}>
+                                        {passwordChecks.uppercase ? "✓" : "✗"} One uppercase letter
+                                    </Typography>
+
+                                    <Typography sx={{ color: passwordChecks.digit ? "#22c55e" : "#ef4444" }}>
+                                        {passwordChecks.digit ? "✓" : "✗"} One number
+                                    </Typography>
+
+                                    <Typography sx={{ color: passwordChecks.special ? "#22c55e" : "#ef4444" }}>
+                                        {passwordChecks.special ? "✓" : "✗"} One special character
+                                    </Typography>
+
+                                </Box>
+                            )}
+
+                            {formState === 1 && (
+                                <TextField
+                                    margin="normal"
+                                    fullWidth
+                                    label="Confirm Password"
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    sx={inputSX}
+                                />
+                            )}
+
+                            {formState === 1 && confirmPassword && (
+                                <Typography
+                                    sx={{
+                                        fontSize: 13,
+                                        color: confirmPassword === password ? "#22c55e" : "#ef4444"
+                                    }}
+                                >
+                                    {confirmPassword === password ? "✓ Passwords match" : "✗ Passwords do not match"}
+                                </Typography>
+                            )}
+
+
+
+
                             {error && (
                                 <Typography sx={{ color: "#ef4444", mt: 1 }}>
                                     {error}
@@ -184,7 +290,12 @@ export default function Authentication() {
 
                             <Button
                                 fullWidth
+                                type="submit"
                                 variant="contained"
+                                disabled={
+                                    formState === 1 &&
+                                    (!isValidPassword(password) || password !== confirmPassword)
+                                }
                                 sx={{
                                     mt: 3,
                                     mb: 2,
@@ -196,8 +307,9 @@ export default function Authentication() {
                                         background: "#5b52d6"
                                     }
                                 }}
-                                onClick={handleAuth}
                             >
+
+
                                 {formState === 0 ? "Login" : "Register"}
                             </Button>
 
