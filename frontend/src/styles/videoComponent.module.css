@@ -407,3 +407,48 @@
     font-size: 20px;
   }
 }
+
+
+
+/* share screen focus */
+/* clickable participant tile */
+.participantTile {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.participantTile:hover {
+    transform: scale(1.05);
+}
+
+/* full screen overlay */
+.focusOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.focusOverlay video {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+/* close button */
+.closeFocusBtn {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}

@@ -58,6 +58,11 @@ export default function VideoMeetComponent() {
 
     let [videos, setVideos] = useState([])
 
+    // Screen share focus mode
+    const [focusedStream, setFocusedStream] = useState(null);
+    const focusedVideoRef = useRef();
+
+
     // TODO
     // if(isChrome() === false) {
 
@@ -76,6 +81,60 @@ export default function VideoMeetComponent() {
             getMedia();
         }
     }, []);
+
+    useEffect(() => {
+        // Add 2 fake history states (history lock)
+        window.history.pushState(null, "", window.location.href);
+        window.history.pushState(null, "", window.location.href);
+
+        const cleanupMeeting = () => {
+            try {
+                if (window.localStream) {
+                    window.localStream.getTracks().forEach(track => track.stop());
+                }
+
+                for (let id in connections) {
+                    connections[id].close();
+                    delete connections[id];
+                }
+
+                if (socketRef.current) socketRef.current.disconnect();
+            } catch (e) { }
+        };
+
+        const redirectUser = () => {
+            const token = localStorage.getItem("token");
+            window.location.replace(token ? "/home" : "/");
+        };
+
+        const handleBackButton = () => {
+            cleanupMeeting();
+            redirectUser();
+        };
+
+        window.addEventListener("popstate", handleBackButton);
+
+        // Prevent forward navigation back into meeting
+        const handlePageShow = (event) => {
+            if (event.persisted) {
+                cleanupMeeting();
+                redirectUser();
+            }
+        };
+
+        window.addEventListener("pageshow", handlePageShow);
+
+        return () => {
+            window.removeEventListener("popstate", handleBackButton);
+            window.removeEventListener("pageshow", handlePageShow);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (focusedVideoRef.current && focusedStream) {
+            focusedVideoRef.current.srcObject = focusedStream;
+        }
+    }, [focusedStream]);
 
 
 
@@ -436,26 +495,30 @@ export default function VideoMeetComponent() {
 
     let handleEndCall = () => {
 
-    localStorage.removeItem("meet_username");
-    localStorage.removeItem("meet_joined");
+        localStorage.removeItem("meet_username");
+        localStorage.removeItem("meet_joined");
 
-    if (window.localStream) {
-        window.localStream.getTracks().forEach(track => track.stop());
+        try {
+            if (window.localStream) {
+                window.localStream.getTracks().forEach(track => track.stop());
+            }
+
+            for (let id in connections) {
+                connections[id].close();
+                delete connections[id];
+            }
+
+            if (socketRef.current) socketRef.current.disconnect();
+        } catch (e) { }
+
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            window.location.replace("/home");
+        } else {
+            window.location.replace("/");
+        }
     }
-
-    for (let id in connections) {
-        connections[id].close();
-        delete connections[id];
-    }
-
-    if (socketRef.current) {
-        socketRef.current.disconnect();
-    }
-
-    window.location.href = "/home";
-}
-
-
 
 
     let openChat = () => {
@@ -612,14 +675,35 @@ export default function VideoMeetComponent() {
 
                     </div>
 
+                    {/* Screen Share Focus Overlay */}
+                    {focusedStream && (
+                        <div className={styles.focusOverlay}>
+                            <button
+                                className={styles.closeFocusBtn}
+                                onClick={() => setFocusedStream(null)}
+                            >
+                                ✕
+                            </button>
+
+                            <video
+                                ref={focusedVideoRef}
+                                autoPlay
+                                controls={false}
+                            />
+                        </div>
+                    )}
+
 
                     <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
-                            <div key={video.socketId}>
+                            <div
+                                key={video.socketId}
+                                className={styles.participantTile}
+                                onClick={() => setFocusedStream(video.stream)}
+                            >
                                 <video
-
                                     data-socket={video.socketId}
                                     ref={ref => {
                                         if (ref && video.stream) {
@@ -627,13 +711,11 @@ export default function VideoMeetComponent() {
                                         }
                                     }}
                                     autoPlay
-                                >
-                                </video>
+                                />
                             </div>
-
                         ))}
-
                     </div>
+
 
                 </div>
 
