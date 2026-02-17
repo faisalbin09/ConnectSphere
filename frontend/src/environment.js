@@ -1,8 +1,9 @@
-let IS_PROD = true;
-const server = IS_PROD ?
-    "https://connectsphere.onrender.com" :
+let server;
 
-    "http://localhost:8000"
-
+if (import.meta.env.PROD) {
+  server = import.meta.env.VITE_SERVER_URL;
+} else {
+  server = "http://localhost:8000";
+}
 
 export default server;
