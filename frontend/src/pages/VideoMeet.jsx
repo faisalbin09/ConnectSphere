@@ -62,6 +62,15 @@ export default function VideoMeetComponent() {
     const [focusedStream, setFocusedStream] = useState(null);
     const focusedVideoRef = useRef();
 
+    const chatEndRef = useRef(null);
+    const socketConnectedRef = useRef(false);
+
+
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
+
 
     // TODO
     // if(isChrome() === false) {
@@ -70,17 +79,22 @@ export default function VideoMeetComponent() {
     // }
 
     useEffect(() => {
-        getPermissions();
+        const init = async () => {
+            await getPermissions();   // ✅ WAIT until permissions finish
 
-        const savedUser = localStorage.getItem("meet_username");
-        const joined = localStorage.getItem("meet_joined");
+            const savedUser = localStorage.getItem("meet_username");
+            const joined = localStorage.getItem("meet_joined");
 
-        if (savedUser && joined === "true") {
-            setUsername(savedUser);
-            setAskForUsername(false);
-            getMedia();
-        }
+            if (savedUser && joined === "true") {
+                setUsername(savedUser);
+                setAskForUsername(false);
+                getMedia();           // ✅ now media always ready
+            }
+        };
+
+        init();
     }, []);
+
 
     useEffect(() => {
         // Add 2 fake history states (history lock)
@@ -192,18 +206,21 @@ export default function VideoMeetComponent() {
     useEffect(() => {
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
-            console.log("SET STATE HAS ", video, audio);
 
+            // ✅ connect socket only once
+            if (!socketConnectedRef.current) {
+                connectToSocketServer();
+                socketConnectedRef.current = true;
+            }
         }
-
-
     }, [video, audio])
+
+
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
-        connectToSocketServer();
-
     }
+
 
 
 
@@ -556,12 +573,15 @@ export default function VideoMeetComponent() {
     let connect = () => {
         if (!username.trim()) return;
 
+        socketConnectedRef.current = false;  // 👈 add this
+
         localStorage.setItem("meet_username", username);
         localStorage.setItem("meet_joined", "true");
 
         setAskForUsername(false);
         getMedia();
     }
+
 
 
 
@@ -624,6 +644,8 @@ export default function VideoMeetComponent() {
                                     )
                                 }) : <p>No Messages Yet</p>}
 
+                                {/* 👇 ADD THIS LINE RIGHT HERE */}
+                                <div ref={chatEndRef}></div>
 
                             </div>
 
@@ -645,10 +667,8 @@ export default function VideoMeetComponent() {
                                     Send
                                 </Button>
                             </div>
-
-
-
                         </div>
+
                     </div> : <></>}
 
 
