@@ -155,6 +155,13 @@
     overflow: hidden;   /* 👈 key */
 }
 
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
 
 /* Chat header */
 .chatContainer h1 {
