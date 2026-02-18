@@ -40,7 +40,7 @@ export default function VideoMeetComponent() {
 
     let [screen, setScreen] = useState();
 
-    let [showModal, setModal] = useState(true);
+    let [showModal, setModal] = useState(false);
 
     let [screenAvailable, setScreenAvailable] = useState();
 
@@ -629,24 +629,28 @@ export default function VideoMeetComponent() {
                     {showModal ? <div className={styles.chatRoom}>
 
                         <div className={styles.chatContainer}>
-                            <h1>Chat</h1>
+
+                            {/* Header with close button */}
+                            <div className={styles.chatHeader}>
+                                <h1>Chat</h1>
+                                <button
+                                    className={styles.closeChatBtn}
+                                    onClick={() => setModal(false)}
+                                >
+                                    ✕
+                                </button>
+                            </div>
 
                             <div className={styles.chattingDisplay}>
 
-                                {messages.length !== 0 ? messages.map((item, index) => {
+                                {messages.length !== 0 ? messages.map((item, index) => (
+                                    <div style={{ marginBottom: "20px" }} key={index}>
+                                        <p style={{ fontWeight: "bold" }}>{item.sender}</p>
+                                        <p>{item.data}</p>
+                                    </div>
+                                )) : <p>No Messages Yet</p>}
 
-                                    console.log(messages)
-                                    return (
-                                        <div style={{ marginBottom: "20px" }} key={index}>
-                                            <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                                            <p>{item.data}</p>
-                                        </div>
-                                    )
-                                }) : <p>No Messages Yet</p>}
-
-                                {/* 👇 ADD THIS LINE RIGHT HERE */}
                                 <div ref={chatEndRef}></div>
-
                             </div>
 
                             <div className={styles.chattingArea}>
@@ -654,7 +658,6 @@ export default function VideoMeetComponent() {
                                     size="small"
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
-                                    id="outlined-basic"
                                     placeholder="Enter your chat"
                                     variant="outlined"
                                 />
@@ -667,7 +670,9 @@ export default function VideoMeetComponent() {
                                     Send
                                 </Button>
                             </div>
+
                         </div>
+
 
                     </div> : <></>}
 
